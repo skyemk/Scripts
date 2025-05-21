@@ -1,0 +1,59 @@
+//Run this in Chrome Console
+
+// Keeps track of how many files have been downloaded
+var downloadCount = 0;
+
+// Main function to automate file downloads and navigation
+function download() {
+    // Attempt to find the direct download button
+    var directDownloadBtn = document.querySelector('button[title="Download"]');
+    // Button to open the menu (if download is nested inside a menu)
+    var menuBtn = document.querySelector('button[title="Menu"]');
+    // Download option inside the menu (appears after clicking menuBtn)
+    var menuDownloadBtn = document.querySelector('div[aria-label="Download"]');
+    // Button to move to the next item (e.g. next image or file)
+    var nextBtn = document.querySelector('[aria-label="Next"]');
+
+    // If the direct download button is available, use it
+    if (directDownloadBtn) {
+        directDownloadBtn.click();
+        downloadCount++;
+        console.log("Downloaded file #" + downloadCount + " (direct button)");
+
+        // Go to the next item and recursively call download
+        if (nextBtn) {
+            nextBtn.click();
+            setTimeout(download, 500); // Slight delay to let the next item load
+        } else {
+            console.log("No more files to download. Total: " + downloadCount);
+        }
+
+    // If the menu-based download button is available, use it
+    } else if (menuDownloadBtn) {
+        menuDownloadBtn.click();
+        downloadCount++;
+        console.log("Downloaded file #" + downloadCount + " (menu button)");
+
+        // Go to the next item and recursively call download
+        if (nextBtn) {
+            nextBtn.click();
+            setTimeout(download, 500);
+        } else {
+            console.log("No more files to download. Total: " + downloadCount);
+        }
+
+    // If the menu is not yet open, open it and retry
+    } else if (menuBtn && menuBtn.getAttribute('aria-expanded') === "false") {
+        menuBtn.click();
+        console.log("Expanding menu...");
+        setTimeout(download, 300); // Wait for the menu to render
+
+    // If nothing is clickable yet, retry after a short delay
+    } else {
+        console.log("Download button not found. Retrying...");
+        setTimeout(download, 300);
+    }
+}
+
+// Start the automated downloading process
+download();
