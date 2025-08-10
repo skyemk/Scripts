@@ -3,4 +3,4 @@ day to day useful scripts
 
 * Windows wifi connect using Powershell
 
-* Whatsapp batch image download
+* Whatsapp batch image download using devtools
